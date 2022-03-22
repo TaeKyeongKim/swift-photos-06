@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B726A38E27E9A0B60035B7C3 /* ShapeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B726A38D27E9A0B60035B7C3 /* ShapeFactory.swift */; };
 		B74F0D7C27E818E6003DC728 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F0D7B27E818E6003DC728 /* AppDelegate.swift */; };
 		B74F0D7E27E818E6003DC728 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F0D7D27E818E6003DC728 /* SceneDelegate.swift */; };
 		B74F0D8027E818E6003DC728 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74F0D7F27E818E6003DC728 /* ViewController.swift */; };
@@ -43,6 +44,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B726A38D27E9A0B60035B7C3 /* ShapeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeFactory.swift; sourceTree = "<group>"; };
 		B74F0D7827E818E6003DC728 /* group6.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = group6.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B74F0D7B27E818E6003DC728 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B74F0D7D27E818E6003DC728 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -90,6 +92,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B726A38C27E9A0A10035B7C3 /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				B726A38D27E9A0B60035B7C3 /* ShapeFactory.swift */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
 		B74F0D6F27E818E6003DC728 = {
 			isa = PBXGroup;
 			children = (
@@ -158,6 +168,7 @@
 		B74F0DAE27E81ECB003DC728 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B726A38C27E9A0A10035B7C3 /* Factory */,
 				D266127227E95B9A004910B0 /* CustomShape.swift */,
 				D266127427E95BA6004910B0 /* Attribute */,
 			);
@@ -325,6 +336,7 @@
 				D266127327E95B9A004910B0 /* CustomShape.swift in Sources */,
 				D266126F27E95653004910B0 /* CustomColor.swift in Sources */,
 				B74F0D7C27E818E6003DC728 /* AppDelegate.swift in Sources */,
+				B726A38E27E9A0B60035B7C3 /* ShapeFactory.swift in Sources */,
 				D298A2CA27E96D9500B346D1 /* CustomCollectionView.swift in Sources */,
 				B74F0D7E27E818E6003DC728 /* SceneDelegate.swift in Sources */,
 			);
