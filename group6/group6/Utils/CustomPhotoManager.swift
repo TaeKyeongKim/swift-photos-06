@@ -65,11 +65,15 @@ extension CustomPhotoManager{
         switch status {
         case .authorized:
             self.fetchResult = PHAsset.fetchAssets(with: nil)
+            self.startCachingPHAsset()
+            
         default:
             PHPhotoLibrary.requestAuthorization(){ status in
                 switch status {
                 case .authorized:
                     self.fetchResult = PHAsset.fetchAssets(with: nil)
+                    self.startCachingPHAsset()
+                    
                     DispatchQueue.main.async {
                         self.reloadCollectionView()
                     }
@@ -78,6 +82,14 @@ extension CustomPhotoManager{
                 }
             }
         }
+        
+    }
+    
+    func startCachingPHAsset() {
+        guard let assets = self.fetchResult else {return}
+        let index : IndexSet = IndexSet(integersIn: 0..<assets.count)
+        let assetArray : [PHAsset] = assets.objects(at: index)
+        self.startCachingImages(for: assetArray, targetSize: self.thumbnailSize, contentMode: .aspectFit,  options: nil)
     }
     
     func reloadCollectionView(){
