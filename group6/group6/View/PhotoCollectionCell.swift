@@ -25,7 +25,7 @@ class PhotoCollectionCell: UICollectionViewCell{
         contentView.addSubview(imageView)
     }
     
-    func setImage(image: UIImage?){
+    func setImage(image: UIImage){
         self.imageView.image = image
     }
     

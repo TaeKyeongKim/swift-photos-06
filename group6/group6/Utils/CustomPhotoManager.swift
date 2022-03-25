@@ -10,9 +10,6 @@ import UIKit
 import Photos
 
 final class CustomPhotoManager: PHCachingImageManager{
-    enum NotificationName{
-        static let reloadCollectionView = Notification.Name("reloadCollectionView")
-    }
     
     static let shared = CustomPhotoManager()
     private var fetchResult : PHFetchResult<PHAsset>?
@@ -37,52 +34,46 @@ extension CustomPhotoManager{
         return fetchResult?.count ?? 0
     }
     
-    func getImage(indexPath: IndexPath) -> PHAsset?{
+    func getPHAsset(indexPath: IndexPath) -> PHAsset?{
         let asset = fetchResult?.object(at: indexPath.item)
-        
         return asset
     }
     
+    
     func requestImage(asset: PHAsset?, thumbnailSize: CGSize, completion: @escaping (UIImage?) -> Void){
         guard let asset = asset else {
-            completion(nil)
-            return
-    }
-         
-    self.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .aspectFit, options: nil){ image, _ in
-        guard let image = image else {
             let noImage = UIImage(systemName: "multiply")
             completion(noImage)
             return
         }
-            
+        
+        self.requestImage(for: asset, targetSize: thumbnailSize, contentMode: .default, options: nil){ image, _ in
             completion(image)
         }
     }
     
-    func fetchPHAsset(){
-        let status = PHPhotoLibrary.authorizationStatus()
-        switch status {
-        case .authorized:
-            self.fetchResult = PHAsset.fetchAssets(with: nil)
+    //Request Athorization & Fetch image
+    func authorization(completion : @escaping () -> ()) {
+        if PHPhotoLibrary.authorizationStatus() == .authorized {
+            self.fetchImage()
             self.startCachingPHAsset()
-            
-        default:
-            PHPhotoLibrary.requestAuthorization(){ status in
+        }else {
+            PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
                 switch status {
                 case .authorized:
-                    self.fetchResult = PHAsset.fetchAssets(with: nil)
+                    self.fetchImage()
                     self.startCachingPHAsset()
-                    
-                    DispatchQueue.main.async {
-                        self.reloadCollectionView()
-                    }
-                default:
-                    self.fetchResult = nil
+                    completion()
+                default :
+                    //Alert User?
+                    break
                 }
             }
         }
-        
+    }
+    
+    func fetchImage() {
+        self.fetchResult = PHAsset.fetchAssets(with: nil)
     }
     
     func startCachingPHAsset() {
@@ -93,7 +84,7 @@ extension CustomPhotoManager{
     }
     
     func reloadCollectionView(){
-        NotificationCenter.default.post(name: CustomPhotoManager.NotificationName.reloadCollectionView, object: self, userInfo: nil)
+        NotificationCenter.default.post(name: .DidLoadPhoto, object: self, userInfo: nil)
     }
 }
 
@@ -102,11 +93,25 @@ extension CustomPhotoManager{
 
 extension CustomPhotoManager: PHPhotoLibraryChangeObserver{
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-        guard let asset = fetchResult, let change = changeInstance.changeDetails(for: asset) else { return }
-        self.fetchResult = change.fetchResultAfterChanges
+        guard let previousFetchResult = fetchResult, let change = changeInstance.changeDetails(for: previousFetchResult) else { return }
+        let newFetchResult = change.fetchResultAfterChanges
+        let addedIndexPath = change.insertedIndexes
+        let deletedIndexPath = change.removedIndexes
         
-        DispatchQueue.main.async {
-            self.reloadCollectionView()
+        
+        if previousFetchResult.count < newFetchResult.count {
+            self.fetchResult = PHAsset.fetchAssets(with: nil)
+            NotificationCenter.default.post(name: .DidAddPhoto, object: self, userInfo: ["addedIndexPath":addedIndexPath as Any])
+        }else {
+            self.fetchResult = PHAsset.fetchAssets(with: nil)
+            NotificationCenter.default.post(name: .DidDeletePhoto, object: self, userInfo: ["deletedIndexPath":deletedIndexPath as Any])
         }
+
     }
+}
+
+extension Notification.Name {
+    static let DidLoadPhoto = Notification.Name("loadPhoto")
+    static let DidAddPhoto = Notification.Name("AddPhoto")
+    static let DidDeletePhoto = Notification.Name("DeletePhoto")
 }

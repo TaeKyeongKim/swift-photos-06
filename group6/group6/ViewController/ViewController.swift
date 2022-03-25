@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 class ViewController: UIViewController {
     private var collectionView: UICollectionView!
@@ -19,7 +20,11 @@ class ViewController: UIViewController {
         navigationConfigure()
         collectionViewConfigure()
         collectionViewDelegate()
-        CustomPhotoManager.shared.fetchPHAsset()
+        CustomPhotoManager.shared.authorization {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     func collectionViewConfigure(){
@@ -42,12 +47,28 @@ class ViewController: UIViewController {
 
 extension ViewController{
     func addNotification(){
-        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: CustomPhotoManager.NotificationName.reloadCollectionView, object: CustomPhotoManager.shared)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadAddedAsset), name: .DidAddPhoto, object: CustomPhotoManager.shared)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadDeletedFetch), name: .DidDeletePhoto, object: CustomPhotoManager.shared)
     }
     
-    @objc func reloadCollectionView(){
-        self.collectionView.reloadData()
+    @objc func loadAddedAsset(notification: Notification) {
+        guard let addedIndexSet = notification.userInfo?["addedIndexPath"] as? IndexSet else {return}
+        let indexPaths = addedIndexSet.map{IndexPath(row: $0, section: 0)}
+ 
+        DispatchQueue.main.async {
+            self.collectionView.insertItems(at: indexPaths)
+        }
     }
+    
+    @objc func loadDeletedFetch(notification: Notification) {
+        guard let deletedIndexSet = notification.userInfo?["deletedIndexPath"] as? IndexSet else {return}
+        let indexPaths = deletedIndexSet.map{IndexPath(row: $0, section: 0)}
+
+        DispatchQueue.main.async {
+            self.collectionView.deleteItems(at: indexPaths)
+        }
+    }
+    
 }
 
 
@@ -61,9 +82,10 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionCell.identifier, for: indexPath)
         
-        guard let photoCell = cell as? PhotoCollectionCell, let asset = CustomPhotoManager.shared.getImage(indexPath: indexPath) else {return UICollectionViewCell()}
+        guard let photoCell = cell as? PhotoCollectionCell, let asset = CustomPhotoManager.shared.getPHAsset(indexPath: indexPath) else {return UICollectionViewCell()}
         
         CustomPhotoManager.shared.requestImage(asset: asset, thumbnailSize: CustomPhotoManager.shared.thumbnailSize){ image in
+            guard let image = image else {return}
             photoCell.setImage(image: image)
         }
         
