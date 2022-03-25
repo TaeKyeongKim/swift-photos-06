@@ -6,21 +6,20 @@
 //
 
 import UIKit
-import Photos
 
 class ViewController: UIViewController {
-    private var fetchResult : PHFetchResult<PHAsset>?
     private var collectionView: UICollectionView!
 
     private var size = CGSize(width: 100, height: 100)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addNotification()
+        
         navigationConfigure()
         collectionViewConfigure()
         collectionViewDelegate()
-        fetchPHAsset()
-        PHPhotoLibrary.shared().register(self)
+        CustomPhotoManager.shared.fetchPHAsset()
     }
     
     func collectionViewConfigure(){
@@ -38,15 +37,31 @@ class ViewController: UIViewController {
     
 }
 
+
+// MARK: - Use case: add Notification / Noti function
+
+extension ViewController{
+    func addNotification(){
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadCollectionView), name: CustomPhotoManager.NotificationName.reloadCollectionView, object: CustomPhotoManager.shared)
+    }
+    
+    @objc func reloadCollectionView(){
+        self.collectionView.reloadData()
+    }
+}
+
+
+// MARK: - Use case: Configure CollectionView
+
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchResult?.count ?? 0
+        return CustomPhotoManager.shared.fetchResultCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionCell.identifier, for: indexPath)
         
-        guard let photoCell = cell as? PhotoCollectionCell, let asset = fetchResult?.object(at: indexPath.item) else {return UICollectionViewCell()}
+        guard let photoCell = cell as? PhotoCollectionCell, let asset = CustomPhotoManager.shared.getImage(indexPath: indexPath) else {return UICollectionViewCell()}
         
         CustomPhotoManager.shared.requestImage(asset: asset, thumbnailSize: CustomPhotoManager.shared.thumbnailSize){ image in
             photoCell.setImage(image: image)
@@ -76,46 +91,5 @@ extension ViewController{
     
     private func navigationRightBarButtonConfigure(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: nil)
-    }
-    
-}
-// MARK: - Use case: fetchPHAsset
-
-extension ViewController {
-    func fetchPHAsset(){
-        if PHPhotoLibrary.authorizationStatus() == .authorized {
-            self.fetchResult = PHAsset.fetchAssets(with: .image, options: nil)
-        }
-        
-        PHPhotoLibrary.requestAuthorization(for: .readWrite) { status in
-            switch status {
-            case .notDetermined:
-                break
-            case .restricted:
-                break
-            case .denied:
-                break
-            case .authorized:
-                self.fetchResult = PHAsset.fetchAssets(with: nil)
-                DispatchQueue.main.async {
-                    self.collectionView.reloadData()
-                }
-            default :
-                break
-            }
-        }
-    }
-
-}
-
-
-extension ViewController : PHPhotoLibraryChangeObserver {
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
-        guard let asset = fetchResult , let change = changeInstance.changeDetails(for: asset) else {return}
-        self.fetchResult = change.fetchResultAfterChanges
-        
-        DispatchQueue.main.async {
-            self.collectionView.reloadData()
-        }
     }
 }
