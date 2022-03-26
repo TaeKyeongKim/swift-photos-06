@@ -25,6 +25,7 @@ class ViewController: UIViewController {
                 self.collectionView.reloadData()
             }
         }
+        
     }
     
     func collectionViewConfigure(){
@@ -104,6 +105,7 @@ extension ViewController{
     private func navigationConfigure(){
         navigationTitleConfigure()
         navigationRightBarButtonConfigure()
+        navigationLeftBarButtonConfigure()
     }
     
     private func navigationTitleConfigure(){
@@ -114,4 +116,16 @@ extension ViewController{
     private func navigationRightBarButtonConfigure(){
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: nil)
     }
+    
+    private func navigationLeftBarButtonConfigure(){
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+    }
+    
+    @objc func addTapped() {
+        let doodleVC = DoodleViewController()
+        let navVC = UINavigationController(rootViewController: doodleVC)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: true)
+    }
+    
 }
