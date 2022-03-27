@@ -24,7 +24,7 @@
 		B75A1B7D27EEE90400E92FB8 /* UrlModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A1B7C27EEE90400E92FB8 /* UrlModel.swift */; };
 		B75A1B8027EEEAF000E92FB8 /* doodle.json in Resources */ = {isa = PBXBuildFile; fileRef = B75A1B7F27EEEAF000E92FB8 /* doodle.json */; };
 		B75A1B8227EEECAC00E92FB8 /* DoodleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A1B8127EEECAC00E92FB8 /* DoodleViewController.swift */; };
-		B75A1B8427EF4CF700E92FB8 /* DoodleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A1B8327EF4CF700E92FB8 /* DoodleImage.swift */; };
+		B75A1B8427EF4CF700E92FB8 /* DoodleCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75A1B8327EF4CF700E92FB8 /* DoodleCollectionCell.swift */; };
 		D24E744027EB06E0004BCE08 /* PhotoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D24E743F27EB06E0004BCE08 /* PhotoCollectionCell.swift */; };
 		D266126F27E95653004910B0 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D266126E27E95653004910B0 /* CustomColor.swift */; };
 		D266127127E95B61004910B0 /* CustomSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = D266127027E95B61004910B0 /* CustomSize.swift */; };
@@ -81,7 +81,7 @@
 		B75A1B7C27EEE90400E92FB8 /* UrlModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlModel.swift; sourceTree = "<group>"; };
 		B75A1B7F27EEEAF000E92FB8 /* doodle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = doodle.json; sourceTree = "<group>"; };
 		B75A1B8127EEECAC00E92FB8 /* DoodleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoodleViewController.swift; sourceTree = "<group>"; };
-		B75A1B8327EF4CF700E92FB8 /* DoodleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoodleImage.swift; sourceTree = "<group>"; };
+		B75A1B8327EF4CF700E92FB8 /* DoodleCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoodleCollectionCell.swift; sourceTree = "<group>"; };
 		D24E743F27EB06E0004BCE08 /* PhotoCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionCell.swift; sourceTree = "<group>"; };
 		D266126E27E95653004910B0 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		D266127027E95B61004910B0 /* CustomSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSize.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 			children = (
 				D298A2CB27E96DBA00B346D1 /* RectangleCollectionCell.swift */,
 				D24E743F27EB06E0004BCE08 /* PhotoCollectionCell.swift */,
-				B75A1B8327EF4CF700E92FB8 /* DoodleImage.swift */,
+				B75A1B8327EF4CF700E92FB8 /* DoodleCollectionCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -426,7 +426,7 @@
 				B75A1B6C27EC7CDB00E92FB8 /* CustomPhotoManager.swift in Sources */,
 				B74F0D7C27E818E6003DC728 /* AppDelegate.swift in Sources */,
 				B726A38E27E9A0B60035B7C3 /* ShapeFactory.swift in Sources */,
-				B75A1B8427EF4CF700E92FB8 /* DoodleImage.swift in Sources */,
+				B75A1B8427EF4CF700E92FB8 /* DoodleCollectionCell.swift in Sources */,
 				B74F0D7E27E818E6003DC728 /* SceneDelegate.swift in Sources */,
 				B75A1B8227EEECAC00E92FB8 /* DoodleViewController.swift in Sources */,
 				B75A1B7D27EEE90400E92FB8 /* UrlModel.swift in Sources */,

@@ -17,13 +17,19 @@ class DoodleCollectionCell: UICollectionViewCell{
         super.init(coder: coder)
         imageView.frame = self.contentView.bounds
         contentView.addSubview(imageView)
+       
+        
     }
         
     override init(frame: CGRect) {
         super.init(frame: frame)
         imageView.frame = self.contentView.bounds
         contentView.addSubview(imageView)
+        
     }
+    
+ 
+    
     
     func setImage(image: UIImage){
         self.imageView.image = image

@@ -15,9 +15,11 @@ class DoodleViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         navigationConfigure()
         collectionViewConfigure()
         collectionViewDelegate()
+        setupGesture()
         fetchURL()
       
     }
@@ -38,9 +40,26 @@ class DoodleViewController : UIViewController {
         collectionView.dataSource = self
     }
     
+    func setupGesture() {
+        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(saveImage))
+        longPressedGesture.minimumPressDuration = 1
+        longPressedGesture.delegate = self
+        longPressedGesture.delaysTouchesBegan = true
+        collectionView?.addGestureRecognizer(longPressedGesture)
+    }
+    
+    @objc func saveImage (gestureRecognizer: UILongPressGestureRecognizer) {
+        let p = gestureRecognizer.location(in: collectionView)
+
+            if let indexPath = collectionView?.indexPathForItem(at: p) {
+                print("Long press at item: \(indexPath.row)")
+            }
+        
+    }
     
 }
 
+//MARK: navigation configuration case
 
 extension DoodleViewController {
     
@@ -58,11 +77,16 @@ extension DoodleViewController {
     }
     
     private func navigationRightBarButtonConfigure(){
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: nil)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(dissmissDoodles))
     }
     
+    @objc func dissmissDoodles () {
+        self.dismiss(animated: true)
+    }
     
 }
+
+//MARK: CollectionVeiw case
 
 extension DoodleViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -87,4 +111,14 @@ extension DoodleViewController : UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 110, height: 50)
     }
+}
+
+//MARK: gestureRecognizer  case
+extension DoodleViewController : UIGestureRecognizerDelegate {
+
+    //Scroll 과 long pressed 제스처가 동시에 인식됨.
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool{
+           return true
+       }
+
 }
