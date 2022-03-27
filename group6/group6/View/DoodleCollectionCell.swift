@@ -12,13 +12,14 @@ class DoodleCollectionCell: UICollectionViewCell{
     static let identifier: String = "DoodleCollectionCell"
     
     private let imageView = UIImageView()
-    
+    override var canBecomeFirstResponder: Bool {
+        true
+    }
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         imageView.frame = self.contentView.bounds
         contentView.addSubview(imageView)
-       
-        
     }
         
     override init(frame: CGRect) {
@@ -27,10 +28,7 @@ class DoodleCollectionCell: UICollectionViewCell{
         contentView.addSubview(imageView)
         
     }
-    
- 
-    
-    
+
     func setImage(image: UIImage){
         self.imageView.image = image
     }

@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Photos
-
+import OSLog
 class ViewController: UIViewController {
     private var collectionView: UICollectionView!
 
@@ -55,7 +54,7 @@ extension ViewController{
     @objc func loadAddedAsset(notification: Notification) {
         guard let addedIndexSet = notification.userInfo?["addedIndexPath"] as? IndexSet else {return}
         let indexPaths = addedIndexSet.map{IndexPath(row: $0, section: 0)}
- 
+        os_log("Photo Added")
         DispatchQueue.main.async {
             self.collectionView.insertItems(at: indexPaths)
         }
@@ -64,7 +63,7 @@ extension ViewController{
     @objc func loadDeletedFetch(notification: Notification) {
         guard let deletedIndexSet = notification.userInfo?["deletedIndexPath"] as? IndexSet else {return}
         let indexPaths = deletedIndexSet.map{IndexPath(row: $0, section: 0)}
-
+        os_log("Photo Deleted")
         DispatchQueue.main.async {
             self.collectionView.deleteItems(at: indexPaths)
         }

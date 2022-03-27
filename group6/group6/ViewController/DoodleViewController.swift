@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 class DoodleViewController : UIViewController {
 
     private var collectionView: UICollectionView!
@@ -41,20 +42,31 @@ class DoodleViewController : UIViewController {
     }
     
     func setupGesture() {
-        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(saveImage))
+        let longPressedGesture = UILongPressGestureRecognizer(target: self, action: #selector(selectCell))
         longPressedGesture.minimumPressDuration = 1
-        longPressedGesture.delegate = self
         longPressedGesture.delaysTouchesBegan = true
         collectionView?.addGestureRecognizer(longPressedGesture)
     }
     
-    @objc func saveImage (gestureRecognizer: UILongPressGestureRecognizer) {
+    @objc func selectCell (gestureRecognizer: UILongPressGestureRecognizer) {
         let p = gestureRecognizer.location(in: collectionView)
-
-            if let indexPath = collectionView?.indexPathForItem(at: p) {
-                print("Long press at item: \(indexPath.row)")
-            }
+        guard let indexPath = collectionView?.indexPathForItem(at: p) else {return}
+        guard let selectedCell = collectionView.cellForItem(at: indexPath) else {return}
+        selectedCell.becomeFirstResponder()
         
+        UIMenuController.shared.arrowDirection = .default
+        UIMenuController.shared.showMenu(from: selectedCell, rect: selectedCell.bounds)
+        let menuItem = CustomMenuItem(title: "Save", action: #selector(downloadImage(sender:)), indexPath: indexPath)
+        UIMenuController.shared.menuItems = [menuItem]
+    }
+    
+    @objc func downloadImage(sender: UIMenuController) {
+        
+        guard let saveMenuItem = sender.menuItems?.first as? CustomMenuItem else {return}
+        guard let selectedModel = self.URLModels?[saveMenuItem.indexPath.item] else {return}
+        DataManager.shared.downloadImage(url: selectedModel.image) { image in
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        }
     }
     
 }
@@ -113,12 +125,3 @@ extension DoodleViewController : UICollectionViewDelegate, UICollectionViewDataS
     }
 }
 
-//MARK: gestureRecognizer  case
-extension DoodleViewController : UIGestureRecognizerDelegate {
-
-    //Scroll 과 long pressed 제스처가 동시에 인식됨.
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool{
-           return true
-       }
-
-}
